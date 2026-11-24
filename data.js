@@ -71,5 +71,52 @@ const NETWORK = [
 "@2 Hackney Downs,Clapton,@3 St James Street,Walthamstow Central,@4 Wood Street,Highams Park,@5 Chingford"]},
 {id:"suffragette",label:"Suffragette (Overground)",color:"#5FB46A",paths:[
 "@2 Gospel Oak,Upper Holloway,@3 Crouch Hill,Harringay Green Lanes,South Tottenham,Blackhorse Road,Walthamstow Queen’s Road,Leyton Midland Road,Leytonstone High Road,Wanstead Park,Woodgrange Park,@4 Barking,Barking Riverside"]},
-{id:"liberty",label:"Liberty (Overground)",color:"#6D6E71",paths:["@6 Romford,Emerson Park,Upminster"]}
+{id:"liberty",label:"Liberty (Overground)",color:"#6D6E71",paths:["@6 Romford,Emerson Park,Upminster"]},
+{id:"thameslink",label:"Thameslink",color:"#E4007C",paths:[
+"@4 Mill Hill Broadway,@3 Hendon,Cricklewood,@2 West Hampstead Thameslink,Kentish Town,@1 King’s Cross St Pancras,Farringdon,City Thameslink,Blackfriars,London Bridge",
+"@1 London Bridge,@5 East Croydon",
+"@1 London Bridge,@2 Deptford,Greenwich,@3 Maze Hill,Westcombe Park,Charlton,@4 Woolwich Arsenal,Plumstead,Abbey Wood,@5 Belvedere,@6 Erith,Slade Green",
+"@1 Blackfriars,Elephant & Castle,@2 Loughborough Junction,Herne Hill,@3 Tulse Hill,Streatham",
+"@3 Streatham,Tooting,Haydons Road,Wimbledon,@4 South Merton,Morden South,St Helier,@5 Sutton",
+"@3 Streatham,Mitcham Eastfields,@4 Mitcham Junction,Hackbridge,Carshalton,@5 Sutton"]}
+];
+
+// Tickbox groups on the setup screen. The Tube is always included.
+const NETS={elizabeth:["elizabeth"],thameslink:["thameslink"],overground:["lioness","mildmay","windrush","weaver","suffragette","liberty"],dlr:["dlr"]};
+
+// A ban "Junction|a|b" means a train can't run a -> Junction -> b without reversing,
+// so a route between those sides needs a change at the junction (a same-line change).
+const BANS={
+central:["North Acton|West Acton|Hanger Lane","Leytonstone|Snaresbrook|Wanstead","Woodford|Buckhurst Hill|Roding Valley"],
+circle:["Paddington|Royal Oak|Bayswater"],
+district:["Earl’s Court|High Street Kensington|Gloucester Road","Earl’s Court|High Street Kensington|West Kensington","Earl’s Court|West Brompton|West Kensington","Turnham Green|Gunnersbury|Chiswick Park"],
+metropolitan:["Harrow-on-the-Hill|North Harrow|West Harrow","Moor Park|Rickmansworth|Croxley","Chalfont & Latimer|Chorleywood|Chesham","Chalfont & Latimer|Amersham|Chesham"],
+northern:["Camden Town|Chalk Farm|Kentish Town","Camden Town|Mornington Crescent|Euston","Euston|Mornington Crescent|Camden Town","Euston|Mornington Crescent|King’s Cross St Pancras","Euston|Camden Town|Warren Street","Euston|Warren Street|King’s Cross St Pancras","Kennington|Waterloo|Elephant & Castle","Kennington|Oval|Nine Elms","Finchley Central|Mill Hill East|West Finchley","Finchley Central|Mill Hill East|East Finchley"],
+piccadilly:["Acton Town|South Ealing|Ealing Common","Hatton Cross|Heathrow Terminal 4|Heathrow Terminals 2 & 3"],
+elizabeth:["Hayes & Harlington|West Drayton|Heathrow Terminals 2 & 3","Whitechapel|Stratford|Canary Wharf"],
+dlr:["Shadwell|Tower Gateway|Bank/Monument","Poplar|Westferry|All Saints","Poplar|Blackwall|All Saints","Poplar|Blackwall|West India Quay","Canning Town|East India|West Ham","Canning Town|East India|West Silvertown","Canning Town|Royal Victoria|West Ham","Canning Town|Royal Victoria|West Silvertown"],
+mildmay:["Willesden Junction|Acton Central|Shepherd’s Bush"],
+windrush:["Surrey Quays|New Cross|Queens Road Peckham","Sydenham|Penge West|Anerley"],
+weaver:["Hackney Downs|Rectory Road|Clapton","Edmonton Green|Bush Hill Park|Southbury"],
+thameslink:["Blackfriars|London Bridge|Elephant & Castle","London Bridge|East Croydon|Deptford","Streatham|Tooting|Mitcham Eastfields"]
+};
+
+// Paired stations shown on the map as one interchange: [dropdown label, ...member stations].
+// Both stops stay on their lines; changing between members counts as one interchange.
+const GROUPS=[
+["Moorgate/Liverpool Street","Moorgate","Liverpool Street"],
+["Hackney Downs/Hackney Central","Hackney Downs","Hackney Central"],
+["Dalston Junction/Dalston Kingsland","Dalston Junction","Dalston Kingsland"],
+["Kilburn/Kilburn High Road","Kilburn","Kilburn High Road"],
+["Kentish Town/Kentish Town West","Kentish Town","Kentish Town West"],
+["Camden Town/Camden Road","Camden Town","Camden Road"],
+["Finchley Road/Finchley Road & Frognal","Finchley Road","Finchley Road & Frognal"],
+["Euston/Euston Square","Euston","Euston Square"],
+["Edgware Road (Bakerloo/Circle)","Edgware Road (Bakerloo)","Edgware Road (Circle)"],
+["Hammersmith (all lines)","Hammersmith","Hammersmith (H&C)"],
+["Tower Hill/Tower Gateway","Tower Hill","Tower Gateway"],
+["Woolwich/Woolwich Arsenal","Woolwich","Woolwich Arsenal"],
+["Stratford/Stratford International","Stratford","Stratford International"],
+["Clapham North/Clapham High Street","Clapham North","Clapham High Street"],
+["West Hampstead/West Hampstead Thameslink","West Hampstead","West Hampstead Thameslink"]
 ];
