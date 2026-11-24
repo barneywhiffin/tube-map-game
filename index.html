@@ -3,50 +3,56 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Fewest changes: London shortest-route game</title>
+<title>Fewest stops: London shortest-route game</title>
 <style>
 *{box-sizing:border-box}
-:root{--bg:#f1f4f8;--ink:#0b1b33;--mute:#5a6a82;--card:#fff;--bd:#cfd8e4;--hl:#e8eef7;--red:#dc241f;--ok:#0e7a3a;--no:#c4231e;--focus:#0019a8}
-@media (prefers-color-scheme:dark){:root{--bg:#0b1424;--ink:#edf2fa;--mute:#94a4bb;--card:#13213a;--bd:#2b3d5c;--hl:#1c2e4d;--ok:#4cc47d;--no:#ff7a73;--focus:#8fa4ff}}
-body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.45 "Gill Sans","Gill Sans MT",Calibri,"Trebuchet MS",sans-serif}
-#app{max-width:560px;margin:0 auto;padding:28px 18px 90px}
+html{-webkit-text-size-adjust:100%}
+@media (max-width:640px){html{font-size:19px}}
+:root{--bg:#f1f4f8;--ink:#0b1b33;--mute:#5a6a82;--card:#fff;--empty:#c9d1dd;--bd:#cfd8e4;--hl:#e8eef7;--red:#dc241f;--ok:#0e7a3a;--no:#c4231e;--focus:#0019a8}
+@media (prefers-color-scheme:dark){:root{--bg:#0b1424;--ink:#edf2fa;--mute:#94a4bb;--card:#13213a;--empty:#34455f;--bd:#2b3d5c;--hl:#1c2e4d;--ok:#4cc47d;--no:#ff7a73;--focus:#8fa4ff}}
+body{margin:0;background:var(--bg);color:var(--ink);font:1.0625rem/1.45 "Gill Sans","Gill Sans MT",Calibri,"Trebuchet MS",sans-serif}
+#app{max-width:35rem;margin:0 auto;padding:1.75rem 1.125rem 5.6rem}
 h1{font-size:2.4rem;line-height:1.05;margin:.2em 0 .3em;letter-spacing:-.01em}
 h2{font-size:1rem;margin:1.6em 0 .5em}
 .lede{color:var(--mute);max-width:46ch}
 .hint{color:var(--mute);font-size:.9rem;margin:.5em 0 0}
 button{font:inherit;cursor:pointer}
 button:focus-visible,input:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
-.pills{display:flex;flex-wrap:wrap;gap:8px}
-.pill{padding:8px 14px;border:1.5px solid var(--bd);border-radius:999px;background:var(--card);color:var(--ink)}
+.pills{display:flex;flex-wrap:wrap;gap:.5rem}
+.pill{padding:.5rem .875rem;border:1.5px solid var(--bd);border-radius:999px;background:var(--card);color:var(--ink)}
 .pill.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.go{display:block;width:100%;margin-top:22px;padding:14px;border:0;border-radius:8px;background:var(--red);color:#fff;font-weight:700;font-size:1.05rem}
+.checks{display:grid;gap:.6rem}
+.check{display:flex;gap:.65rem;align-items:center;cursor:pointer}
+.check input{width:1.3rem;height:1.3rem;margin:0;accent-color:var(--red)}
+.go{display:block;width:100%;margin-top:1.4rem;padding:.875rem;border:0;border-radius:.5rem;background:var(--red);color:#fff;font-weight:700;font-size:1.05rem}
 .go:disabled{background:var(--bd);color:var(--mute);cursor:not-allowed}
-.bar{display:flex;justify-content:space-between;color:var(--mute);margin-bottom:18px;font-variant-numeric:tabular-nums}
-.row{display:grid;grid-template-columns:34px 1fr;column-gap:14px;position:relative}
+.bar{display:flex;justify-content:space-between;color:var(--mute);margin-bottom:1.1rem;font-variant-numeric:tabular-nums}
+.row{display:grid;grid-template-columns:2.125rem 1fr;column-gap:.875rem;position:relative}
 .rail{position:relative}
-.line .rail::before{content:"";position:absolute;left:12px;width:10px;top:-34px;bottom:-34px;background:var(--c,var(--bd))}
-.stn .rail::after{content:"";position:absolute;z-index:2;left:5px;top:50%;width:24px;height:24px;margin-top:-12px;border:5px solid var(--ink);border-radius:50%;background:var(--card)}
-.body{padding:14px 0;min-width:0}
-.line .body{display:flex;flex-direction:column;gap:10px;padding:18px 0}
+.line .rail::before{content:"";position:absolute;left:.75rem;width:.625rem;top:-2.125rem;bottom:-2.125rem;background:var(--c,var(--bd))}
+.stn .rail::after{content:"";position:absolute;z-index:2;left:.3125rem;top:50%;width:1.5rem;height:1.5rem;margin-top:-.75rem;border:.3125rem solid #fff;border-radius:50%;background:#000}
+.stn.empty .rail::after{border-color:var(--empty)}
+.body{padding:.875rem 0;min-width:0}
+.line .body{display:flex;flex-direction:column;gap:.625rem;padding:1.125rem 0}
 .stn small{display:block;color:var(--mute);font-size:.85rem}
 .stn b{font-size:1.3rem}
-.stn i{font-style:normal;color:var(--mute);margin-left:8px;font-size:.9rem}
-.chg{display:flex;gap:6px;align-items:center}
-.plus{align-self:flex-start;padding:7px 14px;border:1.5px dashed var(--mute);border-radius:999px;background:none;color:var(--ink)}
-.rm{border:0;background:none;color:var(--mute);font-size:1.2rem;padding:6px 10px}
+.stn i{font-style:normal;color:var(--mute);margin-left:.5rem;font-size:.9rem}
+.chg{display:flex;gap:.4rem;align-items:center}
+.plus{align-self:flex-start;padding:.45rem .875rem;border:1.5px dashed var(--mute);border-radius:999px;background:none;color:var(--ink)}
+.rm{border:0;background:none;color:var(--mute);font-size:1.2rem;padding:.4rem .6rem}
 .locked{pointer-events:none}.locked .plus,.locked .rm{display:none}
 .combo{position:relative;flex:1;min-width:0}
-.combo input{width:100%;font:inherit;padding:11px 12px;border:1.5px solid var(--bd);border-radius:6px;background:var(--card);color:var(--ink)}
-.list{position:absolute;z-index:5;left:0;right:0;top:calc(100% + 4px);max-height:250px;overflow:auto;background:var(--card);border:1.5px solid var(--bd);border-radius:6px}
-.opt{padding:9px 12px;border-left:7px solid transparent;cursor:pointer}
+.combo input{width:100%;font:inherit;padding:.7rem .75rem;border:1.5px solid var(--bd);border-radius:.4rem;background:var(--card);color:var(--ink)}
+.list{position:absolute;z-index:5;left:0;right:0;top:calc(100% + .25rem);max-height:15.6rem;overflow:auto;background:var(--card);border:1.5px solid var(--bd);border-radius:.4rem}
+.opt{padding:.55rem .75rem;border-left:.45rem solid transparent;cursor:pointer}
 .opt.on,.opt:hover{background:var(--hl)}
-#res{margin-top:24px}
+#res{margin-top:1.5rem}
 #res h3{margin:0 0 .3em;font-size:1.5rem}
 .ok{color:var(--ok)}.no{color:var(--no)}
-.route{list-style:none;padding:0;margin:.8em 0 0;display:grid;gap:8px}
-.route li{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px}
+.route{list-style:none;padding:0;margin:.8em 0 0;display:grid;gap:.5rem}
+.route li{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.625rem}
 .route em{font-style:normal;color:var(--mute);font-size:.9rem}
-.chip{padding:3px 10px;border-radius:5px;font-weight:700;font-size:.9rem;white-space:nowrap}
+.chip{padding:.2rem .625rem;border-radius:.3rem;font-weight:700;font-size:.9rem;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -58,62 +64,119 @@ const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=nu
 const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const norm=s=>s.toLowerCase().replace(/[’']/g,'');
 const pl=(n,w)=>`${n} ${w}${n===1?'':'s'}`;
-const sum=o=>`${pl(o.changes,'change')}, ${pl(o.stops,'stop')}`;
+const sum=o=>`${pl(o.changes,'change')}, ${pl(o.cost,'stop')} in total`;
+const NET_LABEL={elizabeth:'Elizabeth line',thameslink:'Thameslink',overground:'Overground',dlr:'DLR'};
 
-/* ---------- build the graph ---------- */
-const zone={},byId={},stLines={};
-for(const L of NETWORK){
-  byId[L.id]=L;L.adj={};
-  for(const p of L.paths){
-    let z=0,prev=null;
-    for(let t of p.split(',')){
-      t=t.trim();const m=t.match(/^@(\d+) (.+)$/);
-      if(m){z=+m[1];t=m[2]}
-      if(!(t in zone))zone[t]=z;
-      (L.adj[t]??=new Set());
-      if(prev&&prev!==t){L.adj[prev].add(t);L.adj[t].add(prev)}
-      prev=t;
+/*LOGIC*/
+/* ---------- saved settings ---------- */
+const g=(()=>{
+  const d={zone:2,rounds:10,mode:'rounds',nets:{elizabeth:true,thameslink:true,overground:true,dlr:true}};
+  try{const s=JSON.parse(localStorage.getItem('tube-settings'))||{};return{...d,...s,nets:{...d.nets,...s.nets}}}catch{return d}
+})();
+const save=()=>{try{localStorage.setItem('tube-settings',JSON.stringify({zone:g.zone,rounds:g.rounds,mode:g.mode,nets:g.nets}))}catch{}};
+
+/* ---------- build the graph for the ticked networks ---------- */
+let LINES,zone,byId,stLines,mem,plOf,pz,P,stationItems,lineItems;
+function buildGraph(){
+  const off=new Set();
+  for(const n in NETS)if(!g.nets[n])NETS[n].forEach(i=>off.add(i));
+  LINES=NETWORK.filter(L=>!off.has(L.id));
+  zone={};byId={};stLines={};
+  for(const L of LINES){
+    byId[L.id]=L;L.adj={};L.ban=new Set();
+    for(const p of L.paths){
+      let z=0,prev=null;
+      for(let t of p.split(',')){
+        t=t.trim();const m=t.match(/^@(\d+) (.+)$/);
+        if(m){z=+m[1];t=m[2]}
+        if(!(t in zone))zone[t]=z;
+        (L.adj[t]??=new Set());
+        if(prev&&prev!==t){L.adj[prev].add(t);L.adj[t].add(prev)}
+        prev=t;
+      }
+    }
+    for(const s in L.adj)(stLines[s]??=[]).push(L);
+    for(const b of BANS[L.id]||[]){const[j,a,c]=b.split('|');L.ban.add(`${j}|${a}|${c}`);L.ban.add(`${j}|${c}|${a}`)}
+  }
+  // "places": single stations, or paired stations shown as one interchange
+  plOf={};mem={};
+  const used=new Set();
+  for(const[label,...ms] of GROUPS){
+    const here=ms.filter(m=>m in zone);if(!here.length)continue;
+    const name=here.length>1?label:here[0];
+    here.forEach(m=>{plOf[m]=name;used.add(m)});mem[name]=here;
+  }
+  for(const s in zone)if(!used.has(s)){plOf[s]=s;mem[s]=[s]}
+  pz={};for(const n in mem)pz[n]=Math.min(...mem[n].map(m=>zone[m]));
+  P=Object.keys(mem).sort((a,b)=>a.localeCompare(b));
+  stationItems=P.map(s=>({v:s,label:s}));
+  lineItems=LINES.map(L=>({v:L.id,label:L.label,color:L.color}));
+}
+
+/* ---------- route finding ----------
+   Cost: 1 per stop, 1 for a change on the same line, 2 for a change to another line.
+   A ride can't reverse at a junction (see BANS); that needs a same-line change. */
+function legHops(L,X,Y){
+  const targets=new Set(mem[Y]);let best=-1;
+  for(const a of mem[X]){
+    if(!L.adj[a])continue;
+    const seen=new Set([a+'|']),q=[[a,'',0]];
+    for(let i=0;i<q.length;i++){
+      const[s,p,d]=q[i];
+      if(targets.has(s)){if(best<0||d<best)best=d;break}
+      for(const n of L.adj[s])if(n!==p&&!(p&&L.ban.has(s+'|'+p+'|'+n))){const k=n+'|'+s;if(!seen.has(k)){seen.add(k);q.push([n,s,d+1])}}
     }
   }
-  for(const s in L.adj)(stLines[s]??=[]).push(L);
+  return best;
 }
-const STATIONS=Object.keys(zone).sort((a,b)=>a.localeCompare(b));
-const stationItems=STATIONS.map(s=>({v:s,label:s}));
-const lineItems=NETWORK.map(L=>({v:L.id,label:L.label,color:L.color}));
+const legKey=sts=>{
+  const legs=[];
+  for(const k of sts){const[s,l,p]=k.split('|');if(p===''||!legs.length)legs.push([l,s,s]);else legs[legs.length-1][2]=s}
+  return legs.map(([l,a,b])=>l+':'+plOf[a]+'>'+plOf[b]).join(';');
+};
+function shortest(A,B){
+  const key=(s,l,p)=>s+'|'+l+'|'+p,dist=new Map(),pred=new Map(),bk=[[]],done=new Set(),ends=[];
+  const push=(d,st)=>(bk[d]??=[]).push(st);
+  for(const s of mem[A])for(const L of stLines[s]){dist.set(key(s,L.id,''),0);push(0,[s,L.id,''])}
+  let bestD=Infinity;
+  for(let d=0;d<bk.length&&d<=bestD;d++){
+    for(const st of bk[d]||[]){
+      const[s,l,p]=st,k=key(s,l,p);
+      if(done.has(k)||dist.get(k)!==d)continue;
+      done.add(k);
+      if(plOf[s]===B){bestD=d;ends.push(k);continue}
+      const relax=(ns,nl,np,w)=>{
+        const nk=key(ns,nl,np),nd=d+w,od=dist.get(nk);
+        if(od===undefined||nd<od){dist.set(nk,nd);pred.set(nk,[k]);push(nd,[ns,nl,np])}
+        else if(nd===od)pred.get(nk).push(k);
+      };
+      const L=byId[l];
+      for(const n of L.adj[s])if(n!==p&&!(p&&L.ban.has(s+'|'+p+'|'+n)))relax(n,l,s,1);
+      if(p)relax(s,l,'',1);
+      for(const m of mem[plOf[s]])for(const L2 of stLines[m])if(L2.id!==l)relax(m,L2.id,'',2);
+    }
+  }
+  if(!ends.length)return null;
+  const path=[];
+  for(let k=ends[0];k;k=pred.get(k)?.[0])path.unshift(k);
+  const legs=[];
+  for(const k of path){const[s,l,p]=k.split('|');if(p==='')legs.push({line:l,stops:[s]});else legs[legs.length-1].stops.push(s)}
+  legs.forEach(x=>x.n=x.stops.length-1);
+  // is there a different route that costs the same?
+  const keys=new Set();let count=0;
+  const walk=(k,acc)=>{
+    if(keys.size>1||count>2000)return;
+    const pr=pred.get(k);
+    if(!pr){count++;keys.add(legKey([k,...acc]));return}
+    for(const x of pr)walk(x,[k,...acc]);
+  };
+  for(const e of ends)walk(e,[]);
+  return{legs,changes:legs.length-1,cost:bestD,hops:legs.reduce((t,x)=>t+x.n,0),tie:keys.size>1};
+}
+/*ENDLOGIC*/
 
 const ink=c=>{const n=parseInt(c.slice(1),16);return((n>>16)*299+(n>>8&255)*587+(n&255)*114)/1000>150?'#0b1b33':'#fff'};
 const chip=L=>`<span class="chip" style="background:${L.color};color:${ink(L.color)}">${esc(L.label)}</span>`;
-
-/* ---------- route finding: fewest changes, then fewest stops ---------- */
-function hops(L,a,b){
-  if(!L.adj[a]||!L.adj[b])return -1;
-  const d={[a]:0},q=[a];
-  for(let i=0;i<q.length;i++){const s=q[i];if(s===b)return d[s];for(const n of L.adj[s])if(!(n in d)){d[n]=d[s]+1;q.push(n)}}
-  return -1;
-}
-function shortest(a,b){
-  const k=(s,l)=>s+'|'+l,dist=new Map(),prev=new Map(),done=new Set(),q=[];
-  for(const L of stLines[a]){dist.set(k(a,L.id),0);q.push([0,a,L.id])}
-  let end=null;
-  while(q.length){
-    let m=0;for(let i=1;i<q.length;i++)if(q[i][0]<q[m][0])m=i;
-    const [d,s,l]=q.splice(m,1)[0],c=k(s,l);
-    if(done.has(c))continue;done.add(c);
-    if(s===b){end=[s,l];break}
-    const go=(ns,nl,w)=>{const n=k(ns,nl);if(!dist.has(n)||d+w<dist.get(n)){dist.set(n,d+w);prev.set(n,[s,l]);q.push([d+w,ns,nl])}};
-    for(const n of byId[l].adj[s])go(n,l,1);
-    for(const L of stLines[s])if(L.id!==l)go(s,L.id,1000);
-  }
-  if(!end)return null;
-  const st=[];for(let c=end;c;c=prev.get(k(...c)))st.unshift(c);
-  const legs=[];
-  for(const [s,l] of st){
-    const g=legs[legs.length-1];
-    if(g&&g.line===l){if(g.stops[g.stops.length-1]!==s)g.stops.push(s)}else legs.push({line:l,stops:[s]});
-  }
-  legs.forEach(g=>g.n=g.stops.length-1);
-  return{legs,changes:legs.length-1,stops:legs.reduce((t,g)=>t+g.n,0)};
-}
 
 /* ---------- searchable dropdown ---------- */
 function combo(items,ph,val,onPick){
@@ -150,10 +213,9 @@ function combo(items,ph,val,onPick){
   return w;
 }
 
-/* ---------- game state and screens ---------- */
+/* ---------- screens ---------- */
 const app=$('#app');
-const g={zone:2,rounds:10};
-const bestKey=()=>`tube-best-${g.zone}-${g.rounds}`;
+const bestKey=()=>`tube-best-${g.mode==='sudden'?'sd':g.rounds}-${g.zone}-${Object.keys(NETS).filter(n=>g.nets[n]).join('+')}`;
 const getBest=()=>{try{return+localStorage.getItem(bestKey())||0}catch{return 0}};
 const setBest=v=>{try{localStorage.setItem(bestKey(),v)}catch{}};
 
@@ -165,25 +227,37 @@ function pills(p,vals,get,set,lab=v=>v){
 }
 
 function showSetup(){
-  app.innerHTML=`<h1>Fewest changes</h1>
-  <p class="lede">Plan the shortest route across the Tube, Elizabeth line, DLR and Overground. Fewest changes wins; ties go to the fewest stops.</p>
+  app.innerHTML=`<h1>Fewest stops</h1>
+  <p class="lede">Plan the shortest route across the Tube and the networks you pick. Each stop costs 1, changing on the same line costs 1, and changing to another line costs 2.</p>
   <h2>Difficulty: zones in play</h2><div id="zp" class="pills"></div><p class="hint" id="zi"></p>
-  <h2>Rounds</h2><div id="rp" class="pills"></div>
+  <h2>Game mode</h2><div id="mp" class="pills"></div>
+  <div id="rw"><h2>Rounds</h2><div id="rp" class="pills"></div></div>
+  <h2>Networks</h2><div id="np" class="checks"></div><p class="hint">The Tube is always included.</p>
   <button class="go" id="go">Start game</button>`;
-  const info=()=>{$('#zi').textContent=`Journeys start and end in ${g.zone===1?'zone 1':'zones 1–'+g.zone}: ${STATIONS.filter(s=>zone[s]<=g.zone).length} stations to draw from.`};
-  pills($('#zp'),[1,2,3,4,5,6,7,8,9],()=>g.zone,v=>{g.zone=v;info()},v=>v===1?'Zone 1':'1–'+v);
-  pills($('#rp'),[5,10,20],()=>g.rounds,v=>{g.rounds=v});
-  info();
+  const info=()=>{$('#zi').textContent=`Journeys start and end in ${g.zone===1?'zone 1':'zones 1–'+g.zone}: ${P.filter(s=>pz[s]<=g.zone).length} stations to draw from.`};
+  const rw=()=>{$('#rw').hidden=g.mode==='sudden'};
+  pills($('#zp'),[1,2,3,4,5,6,7,8,9],()=>g.zone,v=>{g.zone=v;save();info()},v=>v===1?'Zone 1':'1–'+v);
+  pills($('#mp'),['rounds','sudden'],()=>g.mode,v=>{g.mode=v;save();rw()},v=>v==='rounds'?'Set rounds':'Sudden death');
+  pills($('#rp'),[5,10,20],()=>g.rounds,v=>{g.rounds=v;save()});
+  for(const n in NETS){
+    const lb=el('label','check'),i=el('input');i.type='checkbox';i.checked=g.nets[n];
+    i.onchange=()=>{g.nets[n]=i.checked;save();buildGraph();info()};
+    lb.append(i,el('span',null,NET_LABEL[n]));$('#np').append(lb);
+  }
+  rw();info();
   $('#go').onclick=()=>{g.round=0;g.score=0;g.streak=0;nextRound()};
 }
 
 function nextRound(){
   g.round++;
-  const pool=STATIONS.filter(s=>zone[s]<=g.zone);
+  const pool=P.filter(s=>pz[s]<=g.zone);
   let a,b,o;
-  do{a=pool[Math.random()*pool.length|0];b=pool[Math.random()*pool.length|0];o=a!==b&&shortest(a,b)}while(!o||o.stops<2);
+  do{a=pool[Math.random()*pool.length|0];b=pool[Math.random()*pool.length|0];o=a!==b&&shortest(a,b)}while(!o||o.hops<2);
   Object.assign(g,{start:a,end:b,opt:o,legs:[''],changes:[]});
-  app.innerHTML=`<div class="bar"><span>Round ${g.round} of ${g.rounds}</span><span>Score ${g.score}</span><span>Streak ${g.streak}</span></div>
+  const bar=g.mode==='sudden'
+    ?`<span>Round ${g.round}</span><span>Score ${g.score}</span>`
+    :`<span>Round ${g.round} of ${g.rounds}</span><span>Score ${g.score}</span><span>Streak ${g.streak}</span>`;
+  app.innerHTML=`<div class="bar">${bar}</div>
   <div id="builder"></div><button class="go" id="sub" disabled>Submit route</button><div id="res"></div>`;
   $('#sub').onclick=submit;
   build();
@@ -194,7 +268,7 @@ const upd=()=>{$('#sub').disabled=!(g.legs.every(Boolean)&&g.changes.every(Boole
 
 function stRow(label,name){
   const[r,bd]=row('stn');
-  bd.innerHTML=`<small>${label}</small><b>${esc(name)}</b><i>Zone ${zone[name]}</i>`;
+  bd.innerHTML=`<small>${label}</small><b>${esc(name)}</b><i>Zone ${pz[name]}</i>`;
   return r;
 }
 function lnRow(i){
@@ -211,9 +285,10 @@ function lnRow(i){
 }
 function chRow(i){
   const[r,bd]=row('stn');
+  r.classList.toggle('empty',!g.changes[i]);
   bd.innerHTML='<small>Change at</small>';
   const c=el('div','chg');
-  c.append(combo(stationItems,'Choose a station',g.changes[i],v=>{g.changes[i]=v;upd()}));
+  c.append(combo(stationItems,'Choose a station',g.changes[i],v=>{g.changes[i]=v;r.classList.toggle('empty',!v);upd()}));
   if(i===g.changes.length-1){
     const x=el('button','rm','✕');x.title='Remove this change';x.setAttribute('aria-label','Remove this change');
     x.onclick=()=>{g.legs.pop();g.changes.pop();build()};
@@ -231,41 +306,44 @@ function build(){
 }
 
 function judge(){
-  const pts=[g.start,...g.changes,g.end];let total=0;
+  const pts=[g.start,...g.changes,g.end];let cost=0;
   for(let i=0;i<g.legs.length;i++){
-    const L=byId[g.legs[i]],a=pts[i],b=pts[i+1];
-    if(!L.adj[a])return{bad:`${a} isn’t on ${L.label}.`};
-    if(!L.adj[b])return{bad:`${b} isn’t on ${L.label}.`};
-    const h=hops(L,a,b);
-    if(h<0)return{bad:`${L.label} doesn’t connect ${a} to ${b}.`};
-    total+=h;
+    const L=byId[g.legs[i]],X=pts[i],Y=pts[i+1];
+    if(!mem[X].some(m=>L.adj[m]))return{bad:`${X} isn’t on ${L.label}.`};
+    if(!mem[Y].some(m=>L.adj[m]))return{bad:`${Y} isn’t on ${L.label}.`};
+    const h=legHops(L,X,Y);
+    if(h<0)return{bad:`You can’t ride ${L.label} from ${X} to ${Y} without getting off and changing.`};
+    cost+=h+(i?(g.legs[i]===g.legs[i-1]?1:2):0);
   }
-  return{changes:g.legs.length-1,stops:total};
+  return{changes:g.legs.length-1,cost};
 }
 const routeHTML=o=>`<ol class="route">${o.legs.map(l=>`<li>${chip(byId[l.line])}<span>${esc(l.stops[0])} to ${esc(l.stops[l.n])}</span><em>${pl(l.n,'stop')}</em></li>`).join('')}</ol>`;
 
 function submit(){
   $('#builder').classList.add('locked');$('#sub').hidden=true;
   const j=judge(),o=g.opt;
-  const ok=!j.bad&&(j.changes<o.changes||(j.changes===o.changes&&j.stops<=o.stops));
+  const ok=!j.bad&&j.cost<=o.cost;
   g.streak=ok?g.streak+1:0;if(ok)g.score++;
   const head=ok
-    ?`<h3 class="ok">Correct</h3><p>${sum(j)}. That ties for the shortest route.</p>`
+    ?`<h3 class="ok">Correct</h3><p>${sum(j)}. ${o.tie?' That ties for the shortest route.':' You found the shortest route.'}</p>`
     :`<h3 class="no">${j.bad?'That route doesn’t work':'Not the shortest'}</h3><p>${j.bad?esc(j.bad):'Your route: '+sum(j)+'.'}</p><p>Shortest route: ${sum(o)}.</p>${routeHTML(o)}`;
-  $('#res').innerHTML=head+`<button class="go" id="nx">${g.round<g.rounds?'Next round':'See results'}</button>`;
-  $('#nx').onclick=()=>g.round<g.rounds?nextRound():showEnd();
+  const last=g.mode==='sudden'?!ok:g.round>=g.rounds;
+  $('#res').innerHTML=head+`<button class="go" id="nx">${last?'See results':'Next round'}</button>`;
+  $('#nx').onclick=()=>last?showEnd():nextRound();
   $('#nx').scrollIntoView({block:'nearest'});
 }
 
 function showEnd(){
   const prev=getBest();if(g.score>prev)setBest(g.score);
-  app.innerHTML=`<h1>${g.score} of ${g.rounds}</h1>
-  <p class="lede">${g.score===g.rounds?'A perfect run.':'Correct routes this game.'}</p>
+  const sd=g.mode==='sudden';
+  app.innerHTML=`<h1>${sd?g.score:g.score+' of '+g.rounds}</h1>
+  <p class="lede">${sd?pl(g.score,'route')+' right before the first miss.':g.score===g.rounds?'A perfect run.':'Correct routes this game.'}</p>
   <p class="hint">Best on this setting: ${Math.max(prev,g.score)}</p>
   <button class="go" id="again">New game</button>`;
   $('#again').onclick=showSetup;
 }
 
+buildGraph();
 showSetup();
 </script>
 </body>
